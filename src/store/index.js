@@ -1,14 +1,20 @@
 import { createStore } from 'vuex'
+import { getLocalStorage, setLocalStorage } from "@/utils/common";
 
-export default createStore({
+const store = createStore({
   state: {
+    userInfo: getLocalStorage('userInfo') || null,
   },
   getters: {
+    userInfo(state){
+      return state.userInfo
+    }
   },
   mutations: {
+    setUserInfo(state,userInfo){
+      state.userInfo = userInfo
+      setLocalStorage('userInfo',userInfo)
+    }
   },
-  actions: {
-  },
-  modules: {
-  }
 })
+export default store
