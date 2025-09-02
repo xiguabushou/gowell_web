@@ -131,14 +131,27 @@ const handleLogin = () => {
       login(loginInfo).then(res=>{
         if(res.code == "0" ){
           const token = res.data.access_token
+          const expires_time = res.data.access_token_expires_at
           removeLocalStorage("token")
+          removeLocalStorage("expires_time")
           setLocalStorage("token",token)
-          console.log(token)
+          setLocalStorage("expires_time",expires_time)
+          
+          // ✅ 登录成功后：清空表单输入
+          loginForm.email = '';
+          loginForm.password = '';
+          loginForm.captcha = '';
+
+          // 可选：刷新验证码（提升安全性）
+          refreshCaptcha();
+
           loading.value = false;
           ElMessage.success('登录成功！');
+          router.push('/')
         }else{
           loading.value = false;
           ElMessage.error('登录失败');
+          refreshCaptcha();
         }
       })
     } else {

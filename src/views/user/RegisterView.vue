@@ -231,11 +231,15 @@ const handleRegister = () => {
       register(registerInfo).then(res => {
         if (res.code == "0") {
           const token = res.data.access_token
+          const expires_time = res.data.access_token_expires_at
           removeLocalStorage("token")
+          removeLocalStorage("expires_time")
           setLocalStorage("token",token)
+          setLocalStorage("expires_time",expires_time)
           ElMessage.success('注册成功！');
           loading.value = false;
           // 注册成功后跳转到登录页
+          router.push('/')
         
         } else {
           loading.value = false;

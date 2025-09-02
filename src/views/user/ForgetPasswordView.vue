@@ -48,6 +48,11 @@
           </el-button>
         </el-form-item>
       </el-form>
+
+            <!-- 其他链接 -->
+      <div class="extra-links">
+        <span @click="goToLogin">回到登录</span>
+      </div>
     </div>
   </div>
 </template>
@@ -76,6 +81,11 @@ const refreshCaptcha = () => {
       forgetForm.captchaId = res.data.captcha_id;
     }
   });
+};
+
+// 跳转到登录页
+const goToLogin = () => {
+  router.push('/login');
 };
 
 const rules = reactive({
@@ -181,6 +191,14 @@ onMounted(() => {
   margin-top: 10px;
   font-size: 16px;
   font-weight: 500;
+}
+/* 其他链接 */
+.extra-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #999;
 }
 @media (max-width: 768px) {
   .forget-container {

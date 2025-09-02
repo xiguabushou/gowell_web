@@ -1,6 +1,6 @@
 <template>
     <div class="reset-container">
-        <div class="reset-card">
+        <div v-if="!passwordResetSuccess" class="reset-card">
             <h2 class="title">修改密码</h2>
             <el-form :model="resetForm" :rules="rules" ref="resetFormRef" class="reset-form" label-position="top">
                 <!-- 密码 -->
@@ -22,6 +22,11 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else class="success-message">
+            <h2>你已成功修改密码</h2>
+            <p>请使用新密码登录。</p>
+            <el-button type="primary" @click="goToLogin">前往登录</el-button>
+        </div>
     </div>
 </template>
 
@@ -29,19 +34,19 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
-import { resetForgotPassword } from '@/api/user/ResetForgotPassword'
+import { resetForgotPassword } from '@/api/user/ResetForgotPassword';
 
-
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 const resetFormRef = ref();
-let token = ""
+let token = "";
 const resetForm = reactive({
     password: '',
     confirmPassword: '',
 });
 const loading = ref(false);
+const passwordResetSuccess = ref(false);
 
 onMounted(() => {
     token = route.query.token;
@@ -77,21 +82,25 @@ const handleResetPassword = () => {
             const data = {
                 token: token,
                 new_password: resetForm.password
-            }
-            resetForgotPassword(data).then(res=>{
-                if (res.code == "0"){
+            };
+            resetForgotPassword(data).then(res => {
+                if (res.code == "0") {
                     loading.value = false;
                     ElMessage.success('密码修改成功');
-                    router.push('/login')
-                }else{
+                    passwordResetSuccess.value = true;
+                } else {
                     loading.value = false;
-                    ElMessage.error('请求异常');
+                    ElMessage.error('密码修改失败，该链接可能已经失效！');
                 }
-            })  
+            });
         } else {
             ElMessage.error('请检查输入信息');
         }
     });
+};
+
+const goToLogin = () => {
+    router.push('/login');
 };
 </script>
 
@@ -154,16 +163,40 @@ const handleResetPassword = () => {
     font-weight: 500;
 }
 
+.success-message {
+    width: 90%;
+    max-width: 450px;
+    padding: 30px 20px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid #333;
+    text-align: center;
+}
+
+.success-message h2 {
+    color: #bbdefb;
+    font-weight: 600;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.success-message p {
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 768px) {
     .reset-container {
         padding: 15px;
     }
 
-    .reset-card {
+    .reset-card, .success-message {
         padding: 24px 16px;
     }
 
-    .title {
+    .title, .success-message h2 {
         font-size: 1.3em;
     }
 }
