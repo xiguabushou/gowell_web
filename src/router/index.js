@@ -5,7 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import( '../components/Head.vue')
+    component: () => import( '../components/HeadView.vue')
   },
   {
     path: '/login',
