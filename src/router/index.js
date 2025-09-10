@@ -4,8 +4,15 @@ import { getLocalStorage,  removeLocalStorage} from '@/utils/common'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import( '../components/HeadView.vue')
+    name: 'index',
+    component: () => import( '../views/layout/LayoutView.vue'),
+    children: [
+      {
+        path: '/',
+        name: 'home',
+        component: () => import( '../views/content/HomeView.vue')
+      }
+    ]
   },
   {
     path: '/login',

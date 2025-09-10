@@ -16,7 +16,7 @@
       v-model="drawerVisible"
       :with-header="false"
       direction="ltr"
-      size="70%"
+      :size="drawerSize"
       class="side-drawer"
     >
       <div class="drawer-content">
@@ -32,14 +32,30 @@
             <span>首页</span>
           </el-menu-item>
           <el-menu-item index="2">
-            <el-icon><User /></el-icon>
-            <span>个人中心</span>
+            <el-icon><VideoCamera /></el-icon>
+            <span>视频</span>
           </el-menu-item>
           <el-menu-item index="3">
-            <el-icon><Setting /></el-icon>
-            <span>设置</span>
+            <el-icon><Picture /></el-icon>
+            <span>图片</span>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <el-icon><Upload /></el-icon>
+            <span>上传</span>
           </el-menu-item>
         </el-menu>
+        
+        <!-- 退出登录按钮区域 -->
+        <div class="logout-section">
+          <el-button 
+            class="logout-btn" 
+            color="#121212"
+            @click="showLogoutConfirm"
+            :icon="SwitchButton"
+          >
+            退出登录
+          </el-button>
+        </div>
       </div>
     </el-drawer>
   </div>
@@ -47,20 +63,68 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Search, Operation, House, User, Setting } from '@element-plus/icons-vue'
+import { ref, computed } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Search, Operation, House, VideoCamera, Picture, Upload, SwitchButton } from '@element-plus/icons-vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { logout } from '@/api/layout/Layout'
 
+const store = useStore()
+const router = useRouter()
 const drawerVisible = ref(false)
 
 const onSearchClick = () => {
   ElMessage.info('搜索功能开发中')
 }
+
+const drawerSize = computed(() => {
+  return window.innerWidth * 0.5 > 300 ? '300px' : '50%'
+})
+
+// 显示退出登录确认对话框
+const showLogoutConfirm = () => {
+  ElMessageBox.confirm(
+    '您确定要退出登录吗？',
+    '退出登录确认',
+    {
+      confirmButtonText: '确定退出',
+      cancelButtonText: '取消',
+      type: 'warning',
+      confirmButtonClass: 'el-button--danger'
+    }
+  ).then(() => {
+    handleLogout()
+  }).catch(() => {
+    ElMessage.info('已取消退出')
+  })
+}
+
+// 处理退出登录
+const handleLogout = async () => {
+  try {
+    // 调用退出登录API
+    await logout()
+    
+    // 清除本地存储的用户信息
+    store.commit('setUserInfo', null)
+    
+    // 关闭侧边栏
+    drawerVisible.value = false
+    
+    // 跳转到登录页面
+    router.push('/login')
+    
+    ElMessage.success('已成功退出登录')
+  } catch (error) {
+    console.error('退出登录失败:', error)
+    ElMessage.error('退出登录失败，请重试')
+  }
+}
 </script>
 
 <style lang="css" scoped>
 .header-container {
-  padding: 12px;
   background-color: #121212;
 }
 
@@ -70,9 +134,6 @@ const onSearchClick = () => {
   justify-content: space-between;
   height: 56px;
   background-color: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   color: #e0e0e0;
 }
 
@@ -98,7 +159,6 @@ const onSearchClick = () => {
 }
 
 .icon-btn.right {
-  background-color: #242a31;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }
@@ -152,6 +212,8 @@ const onSearchClick = () => {
   color: #e0e0e0;
   background-color: #1e1e1e;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .drawer-title {
@@ -166,6 +228,7 @@ const onSearchClick = () => {
   border: none;
   width: 100%;
   background-color: #1e1e1e;
+  flex: 1;
 }
 
 /* 统一菜单深色风格并避免浅色 hover/active */
@@ -180,6 +243,27 @@ const onSearchClick = () => {
 .menu :deep(.el-sub-menu__title:hover) {
   background-color: #1e1e1e;
   color: #409eff;
+}
+
+/* 退出登录按钮区域 */
+.logout-section {
+  padding: 16px;
+  border-top: 1px solid #333;
+  background-color: #1e1e1e;
+}
+
+.logout-btn {
+  width: 100%;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 108, 108, 0.3);
 }
 
 @media (max-width: 768px) {

@@ -10,4 +10,5 @@ function login(data){
     return http.post('/api/user/login',data)
 }
 
-export { getCaptcha ,login}
+
+export { getCaptcha, login }
