@@ -33,6 +33,11 @@ const routes = [
     path: '/resetForgotPassword',
     name: 'resetForgotPassword',
     component: () => import( '../views/user/ResetForgotPassword.vue')
+  },
+  {
+    path: '/:catchAll(.*)',
+    component: () => import('../views/error/404View.vue'),
+    name: 'NotFound'
   }
 ]
 

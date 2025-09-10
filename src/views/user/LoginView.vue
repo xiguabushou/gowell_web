@@ -80,6 +80,7 @@ import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { getCaptcha, login } from '@/api/user/Login';
 import { setLocalStorage,removeLocalStorage } from '@/utils/common'
+import  store  from '@/store';
 
 const router = useRouter();
 
@@ -101,7 +102,6 @@ const captchaUrl = ref();
 // 刷新验证码
 const refreshCaptcha = () => {
   getCaptcha().then(res=>{
-    console.log(res)
     if(res.code == "0" ){
       captchaUrl.value = res.data.pic_path
       loginForm.captchaId = res.data.captcha_id
@@ -132,10 +132,12 @@ const handleLogin = () => {
         if(res.code == "0" ){
           const token = res.data.access_token
           const expires_time = res.data.access_token_expires_at
+          const userInfo = res.data.user
           removeLocalStorage("token")
           removeLocalStorage("expires_time")
           setLocalStorage("token",token)
           setLocalStorage("expires_time",expires_time)
+          store.commit('setUserInfo',userInfo)
           
           // ✅ 登录成功后：清空表单输入
           loginForm.email = '';

@@ -20,7 +20,8 @@
       class="side-drawer"
     >
       <div class="drawer-content">
-        <div class="drawer-title">菜单</div>
+        <img style="height: 50px; width: auto; padding: 16px 16px 0 16px;" src="../assets/favicon.svg" alt="logo">
+        <div class="drawer-title">{{ store.getters.userInfo != null ? store.getters.userInfo.email : 'XXXX' }}</div>
         <el-menu
           class="menu"
           background-color="#1e1e1e"
@@ -29,15 +30,15 @@
         >
           <el-menu-item index="1">
             <el-icon><House /></el-icon>
-            <span>首页</span>
+            <span v-on:click="index()">首页</span>
           </el-menu-item>
           <el-menu-item index="2">
             <el-icon><VideoCamera /></el-icon>
-            <span>视频</span>
+            <span v-on:click="video()">视频</span>
           </el-menu-item>
           <el-menu-item index="3">
             <el-icon><Picture /></el-icon>
-            <span>图片</span>
+            <span v-on:click="photo()">图片</span>
           </el-menu-item>
           <el-menu-item index="4">
             <el-icon><Upload /></el-icon>
@@ -66,11 +67,11 @@
 import { ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Operation, House, VideoCamera, Picture, Upload, SwitchButton } from '@element-plus/icons-vue'
-import { useStore } from 'vuex'
+import { removeLocalStorage } from '@/utils/common'
 import { useRouter } from 'vue-router'
 import { logout } from '@/api/layout/Layout'
+import  store  from '@/store';
 
-const store = useStore()
 const router = useRouter()
 const drawerVisible = ref(false)
 
@@ -79,7 +80,7 @@ const onSearchClick = () => {
 }
 
 const drawerSize = computed(() => {
-  return window.innerWidth * 0.5 > 300 ? '300px' : '50%'
+  return window.innerWidth * 0.5 > 300 ? '300px' : '55%'
 })
 
 // 显示退出登录确认对话框
@@ -101,26 +102,36 @@ const showLogoutConfirm = () => {
 }
 
 // 处理退出登录
-const handleLogout = async () => {
-  try {
-    // 调用退出登录API
+ const handleLogout = async () => {
+   try {
+     // 调用退出登录API
     await logout()
-    
-    // 清除本地存储的用户信息
+     // 清除本地存储的用户信息
     store.commit('setUserInfo', null)
-    
-    // 关闭侧边栏
-    drawerVisible.value = false
-    
-    // 跳转到登录页面
-    router.push('/login')
-    
-    ElMessage.success('已成功退出登录')
-  } catch (error) {
-    console.error('退出登录失败:', error)
-    ElMessage.error('退出登录失败，请重试')
-  }
+    removeLocalStorage("token")
+    removeLocalStorage("expires_time")
+     // 关闭侧边栏
+     drawerVisible.value = false
+     // 跳转到登录页面
+     router.push('/login')
+     ElMessage.success('已成功退出登录')
+   } catch (error) {
+     ElMessage.error('退出登录失败，请重试')
+   }
+ }
+
+function index(){
+  router.push('/')
 }
+
+function video(){
+  router.push('/video')
+}
+
+function photo(){
+  router.push('/photo')
+}
+
 </script>
 
 <style lang="css" scoped>
