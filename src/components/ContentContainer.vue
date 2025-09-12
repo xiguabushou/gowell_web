@@ -1,6 +1,8 @@
 <template>
     <div>
-        <router-view />
+        <div class="contain">
+            <router-view />
+        </div>
     </div>
 </template>
 
@@ -9,5 +11,9 @@
 </script>
 
 <style lang="css" scoped>
+.contain{
+    overflow-y: auto;
+    height: calc(100vh - 52px);
+}
 
 </style>

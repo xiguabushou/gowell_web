@@ -121,14 +121,17 @@ const showLogoutConfirm = () => {
  }
 
 function index(){
+  drawerVisible.value = false
   router.push('/')
 }
 
 function video(){
+  drawerVisible.value = false
   router.push('/video')
 }
 
 function photo(){
+  drawerVisible.value = false
   router.push('/photo')
 }
 

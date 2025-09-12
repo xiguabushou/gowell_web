@@ -11,6 +11,26 @@ const routes = [
         path: '/',
         name: 'home',
         component: () => import( '../views/content/HomeView.vue')
+      },
+      {
+        path: '/video',
+        name: 'video',
+        component: () => import( '../views/content/VideoView.vue')
+      },
+      {
+        path: '/photo',
+        name: 'photo',
+        component: () => import( '../views/content/PhotoView.vue')
+      },
+      {
+        path: '/videoDetail/:uid',
+        name: 'videoDetail',
+        component: () => import( '../views/content/VideoDetailView.vue')
+      },
+      {
+        path: '/photoDetail/:uid',
+        name: 'photoDetail',
+        component: () => import( '../views/content/PhotoDetailView.vue')
       }
     ]
   },
@@ -48,28 +68,34 @@ const router = createRouter({
 
 // 注册全局前置守卫
 router.beforeEach((to, from, next) => {
-  let token = getLocalStorage('token')
-  let expires_time = getLocalStorage('expires_time')
-
-  if(to.path != '/login' && to.path != '/register' && to.path != '/forgetPassword'){
-    if(token == null || token == '' || token == undefined){
-      removeLocalStorage('expires_time')
-      next('/login')
-    }
-
-    if(expires_time == null || expires_time == '' || expires_time == undefined){
-      removeLocalStorage('token')
-      next('/login')
-    }
-
-    let newTime = Math.round(new Date() / 1000)
-    if(expires_time <= newTime){
-      removeLocalStorage('token')
-      removeLocalStorage('expires_time')
-      next('/login')
-    }
+  const whitelist = ['/login', '/register', '/forgetPassword', '/resetForgotPassword']
+  if (whitelist.includes(to.path)) {
+    return next()
   }
-  next()
+
+  const token = getLocalStorage('token')
+  const expires_time = getLocalStorage('expires_time')
+
+  if (token == null || token === '' || token === undefined) {
+    removeLocalStorage('token')
+    removeLocalStorage('expires_time')
+    return next('/login')
+  }
+
+  if (expires_time == null || expires_time === '' || expires_time === undefined) {
+    removeLocalStorage('token')
+    removeLocalStorage('expires_time')
+    return next('/login')
+  }
+
+  const currentUnixSeconds = Math.round(Date.now() / 1000)
+  if (Number(expires_time) <= currentUnixSeconds) {
+    removeLocalStorage('token')
+    removeLocalStorage('expires_time')
+    return next('/login')
+  }
+
+  return next()
 });
 
 export default router
