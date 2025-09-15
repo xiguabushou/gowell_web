@@ -35,6 +35,8 @@
 
     <!-- 相关推荐区域 -->
     <div class="recommendations-section">
+      <span>相关推荐：</span>
+      <hr style="border: 1px solid #2d2d2d;">
             <div class="recommendations-grid">
                 <div v-for="(item, index) in recommendList.slice(0, 6)" :key="item.id || index"
                     class="recommendation-item" @click="goToVideo(item)">
@@ -96,7 +98,6 @@ const onVideoLoaded = () => {
       width: videoElement.value.videoWidth,
       height: videoElement.value.videoHeight
     }
-    console.log('视频尺寸:', videoDimensions.value)
   }
 }
 
