@@ -146,7 +146,6 @@ watch(
     color: #cfd8dc;
     font-size: 14px;
     background: rgba(33, 33, 33, 0.7);
-    border: 1px solid #ffffff;
     border-radius: 999px;
 }
 

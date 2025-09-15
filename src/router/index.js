@@ -23,6 +23,16 @@ const routes = [
         component: () => import( '../views/content/PhotoView.vue')
       },
       {
+        path: '/uploadVideo',
+        name: 'uploadVideo',
+        component: () => import( '../views/content/UploadVideoView.vue')
+      },
+      {
+        path: '/uploadPhoto',
+        name: 'uploadPhoto',
+        component: () => import( '../views/content/UploadPhotoView.vue')
+      },
+      {
         path: '/videoDetail/:uid',
         name: 'videoDetail',
         component: () => import( '../views/content/VideoDetailView.vue')

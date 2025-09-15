@@ -14,13 +14,15 @@
 
     <!-- 视频播放器区域 -->
     <div class="video-player-section">
-      <div class="video-player">
+      <div class="video-player" :style="playerStyle">
         <video 
           v-if="videoData.video_url"
+          ref="videoElement"
           :src="videoData.video_url"
           controls
           preload="metadata"
           class="video-element"
+          @loadedmetadata="onVideoLoaded"
         >
           您的浏览器不支持视频播放。
         </video>
@@ -35,7 +37,7 @@
     <div class="recommendations-section">
             <div class="recommendations-grid">
                 <div v-for="(item, index) in recommendList.slice(0, 6)" :key="item.id || index"
-                    class="recommendation-item" @click="goToPhoto(item)">
+                    class="recommendation-item" @click="goToVideo(item)">
                     <div class="recommendation-cover" :style="{ backgroundImage: `url(${item.cover})` }" />
                     <div class="recommendation-title">{{ item.title || `推荐 ${index + 1}` }}</div>
                 </div>
@@ -45,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getInfo } from '@/api/content/VideoDetail'
 
@@ -60,19 +62,73 @@ const videoData = ref({
 
 const recommendList = ref([])
 
+// 视频播放器相关状态
+const videoElement = ref(null)
+const videoDimensions = ref({ width: 0, height: 0 })
+const containerMaxWidth = ref(800) // 容器最大宽度
+
+// 计算播放器容器样式
+const playerStyle = computed(() => {
+  if (videoDimensions.value.width === 0 || videoDimensions.value.height === 0) {
+    // 如果视频尺寸未知，使用默认16:9比例
+    return {
+      paddingTop: '56.25%'
+    }
+  }
+  
+  const aspectRatio = videoDimensions.value.height / videoDimensions.value.width
+  const containerWidth = Math.min(window.innerWidth - 24, containerMaxWidth.value) // 减去padding
+  const containerHeight = containerWidth * aspectRatio
+  
+  return {
+    width: '100%',
+    paddingTop: `${aspectRatio * 100}%`,
+    maxWidth: `${containerMaxWidth.value}px`,
+    margin: '0 auto'
+  }
+})
+
+
+// 视频元数据加载完成处理
+const onVideoLoaded = () => {
+  if (videoElement.value) {
+    videoDimensions.value = {
+      width: videoElement.value.videoWidth,
+      height: videoElement.value.videoHeight
+    }
+    console.log('视频尺寸:', videoDimensions.value)
+  }
+}
+
+// 窗口大小变化处理
+const handleResize = () => {
+  // 重新计算容器最大宽度
+  const screenWidth = window.innerWidth
+  if (screenWidth >= 1024) {
+    containerMaxWidth.value = 800
+  } else if (screenWidth >= 768) {
+    containerMaxWidth.value = 600
+  } else {
+    containerMaxWidth.value = screenWidth - 24
+  }
+}
 
 const goToVideo = (item) => {
   if (!item || !item.uid) return
   router.push({ name: 'videoDetail', params: { uid: item.uid } })
 }
 
-onMounted(() => {
-  // 根据路由参数获取视频详情
-  const videoId = route.params.uid
-  if (videoId) {
-    // 这里可以调用API获取视频详情
-    console.log('获取视频详情:', videoId)
-  }
+onMounted(() => {  
+  // 初始化容器尺寸
+  handleResize()
+  
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleResize)
+})
+
+// 组件卸载时清理监听器
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 
 async function fetchVideoInfo() {
@@ -140,7 +196,6 @@ watch(
   color: #cfd8dc;
   font-size: 14px;
   background: rgba(33, 33, 33, 0.7);
-  border: 1px solid #ffffff;
   border-radius: 999px;
 }
 
@@ -151,10 +206,10 @@ watch(
 .video-player {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 比例 */
   background: #000;
   border-radius: 10px;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .video-element {

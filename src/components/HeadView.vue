@@ -27,23 +27,34 @@
           background-color="#1e1e1e"
           text-color="#e0e0e0"
           active-text-color="#409eff"
+          @select="handleMenuSelect"
         >
           <el-menu-item index="1">
             <el-icon><House /></el-icon>
-            <span v-on:click="index()">首页</span>
+            <span >首页</span>
           </el-menu-item>
           <el-menu-item index="2">
             <el-icon><VideoCamera /></el-icon>
-            <span v-on:click="video()">视频</span>
+            <span >视频</span>
           </el-menu-item>
           <el-menu-item index="3">
             <el-icon><Picture /></el-icon>
-            <span v-on:click="photo()">图片</span>
+            <span >图片</span>
           </el-menu-item>
-          <el-menu-item index="4">
-            <el-icon><Upload /></el-icon>
-            <span>上传</span>
-          </el-menu-item>
+          <el-sub-menu index="4">
+            <template #title>
+              <el-icon><Upload /></el-icon>
+              <span>上传</span>
+            </template>
+            <el-menu-item index="4-1">
+              <el-icon><VideoCamera /></el-icon>
+              <span>上传视频</span>
+            </el-menu-item>
+            <el-menu-item index="4-2">
+              <el-icon><Picture /></el-icon>
+              <span>上传图片</span>
+            </el-menu-item>
+          </el-sub-menu>
         </el-menu>
         
         <!-- 退出登录按钮区域 -->
@@ -120,20 +131,18 @@ const showLogoutConfirm = () => {
    }
  }
 
-function index(){
+ const handleMenuSelect = (key) => {
   drawerVisible.value = false
-  router.push('/')
+  switch(key) {
+    case '1': router.push('/'); break
+    case '2': router.push('/video'); break
+    case '3': router.push('/photo'); break
+    case '4-1': router.push('/uploadVideo'); break
+    case '4-2': router.push('/uploadPhoto'); break
+    default: break
+  }
 }
 
-function video(){
-  drawerVisible.value = false
-  router.push('/video')
-}
-
-function photo(){
-  drawerVisible.value = false
-  router.push('/photo')
-}
 
 </script>
 

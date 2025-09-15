@@ -37,7 +37,7 @@ import { getList } from '@/api/content/Video'
 
 
 const currentPage = ref(1)
-const pageSize = ref(5) // 每页数量
+const pageSize = ref(15) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()
@@ -46,7 +46,7 @@ async function fetchContentList() {
   const params = {
     type_id: 1,
     page: currentPage.value,
-    page_size: pageSize.value
+    page_size: pageSize.value,
   }
   const res = await getList(params)
   total.value = res.data?.total || 0
@@ -59,8 +59,15 @@ const onPageChange=(newPage)=>{
 }
 
 const goToDetail = (item) => {
-  if (!item || !item.id) return
-  router.push({ name: 'videoDetail', params: { uid: item.id } })
+  if (!item || !item.uid) return
+  if (item.content_type == '视频'){
+    router.push({ name: 'videoDetail', params: { uid: item.uid } })
+    return
+  }
+  if (item.content_type == '图片'){
+    router.push({ name: 'photoDetail', params: { uid: item.uid } })
+    return
+  }
 }
 
 
