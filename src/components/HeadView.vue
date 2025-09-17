@@ -79,15 +79,23 @@ import { ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Operation, House, VideoCamera, Picture, Upload, SwitchButton } from '@element-plus/icons-vue'
 import { removeLocalStorage } from '@/utils/common'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { logout } from '@/api/layout/Layout'
 import  store  from '@/store';
 
 const router = useRouter()
+const route = useRoute()
 const drawerVisible = ref(false)
 
 const onSearchClick = () => {
-  ElMessage.info('搜索功能开发中')
+  if (route.path == "/video" || route.path.split('/')[1] == "videoDetail" ){
+    router.push("/search/1")
+  }else if (route.path == "/photo" || route.path.split('/')[1] == "photoDetail" ){
+    router.push("/search/2")
+  }else{
+    router.push("/search/0")
+  }
+  
 }
 
 const drawerSize = computed(() => {

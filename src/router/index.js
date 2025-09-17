@@ -45,6 +45,11 @@ const routes = [
     ]
   },
   {
+    path: '/search/:type_id',
+    name: 'search',
+    component: () => import( '../views/content/SearchView.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import( '../views/user/LoginView.vue')
