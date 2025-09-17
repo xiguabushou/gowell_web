@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute} from 'vue-router'
 import { getList } from '@/api/content/Search'
 import { ElMessage } from 'element-plus'
@@ -112,6 +112,26 @@ const goBackHome = () =>{
         router.push("/")
     }
 }
+
+onMounted(() => {
+    const q = route.query?.search_key
+    if (typeof q === 'string' && q.trim()) {
+        keyword.value = q
+        hasSearched.value = true
+        currentPage.value = 1
+        fetchContentList()
+    }
+})
+
+watch(() => route.query?.search_key, (newVal) => {
+    const val = typeof newVal === 'string' ? newVal : ''
+    if (val && val.trim()) {
+        keyword.value = val
+        hasSearched.value = true
+        currentPage.value = 1
+        fetchContentList()
+    }
+})
 
 </script>
 

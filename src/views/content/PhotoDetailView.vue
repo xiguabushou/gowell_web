@@ -8,7 +8,7 @@
         <!-- 标签区域 -->
         <div class="tags-section">
             <div class="tags">
-                <span class="tag" v-for="tag in photoData.tags" :key="tag">{{ tag }}</span>
+                <span class="tag" v-for="tag in photoData.tags" :key="tag" @click="searchTag(tag)">{{ tag }}</span>
             </div>
         </div>
 
@@ -90,6 +90,13 @@ const onPageChange = (newPage) => {
 const goToPhoto = (item) => {
     if (!item || !item.uid) return
     router.push({ name: 'photoDetail', params: { uid: item.uid } })
+}
+
+const searchTag = (tag) => {
+    router.push({
+        path:'/search/2',
+        query:{search_key: tag}
+    })
 }
 
 // 首次加载

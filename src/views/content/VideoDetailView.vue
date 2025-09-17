@@ -8,7 +8,7 @@
     <!-- 标签区域 -->
     <div class="tags-section">
       <div class="tags">
-        <span class="tag" v-for="tag in videoData.tags" :key="tag">{{ tag }}</span>
+        <span class="tag" v-for="tag in videoData.tags" :key="tag" @click="searchTag(tag)">{{ tag }}</span>
       </div>
     </div>
 
@@ -142,6 +142,13 @@ async function fetchVideoInfo() {
   videoData.value.video_url = res.data?.video || ''
   videoData.value.tags = Array.isArray(res.data?.tags) ? res.data.tags : []
   recommendList.value = res.data?.recommend_list || []
+}
+
+const searchTag = (tag) => {
+    router.push({
+        path:'/search/1',
+        query:{search_key: tag}
+    })
 }
 
 // 首次加载
