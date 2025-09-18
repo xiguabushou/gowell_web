@@ -69,6 +69,9 @@ async function fetchContentList() {
     const res = await getList(params)
     total.value = res.data?.total || 0
     filteredData.value = res.data?.list || []
+    if (total.value == 0 ){
+        hasSearched.value = true
+    }
 }
 
 const onPageChange = (newPage) => {
@@ -85,7 +88,6 @@ const onSearch = () => {
         ElMessage.warning('输入内容不能为空')
         return
     }
-    hasSearched.value = true
     currentPage.value = 1
     fetchContentList()
 }
@@ -117,7 +119,6 @@ onMounted(() => {
     const q = route.query?.search_key
     if (typeof q === 'string' && q.trim()) {
         keyword.value = q
-        hasSearched.value = true
         currentPage.value = 1
         fetchContentList()
     }
@@ -127,7 +128,6 @@ watch(() => route.query?.search_key, (newVal) => {
     const val = typeof newVal === 'string' ? newVal : ''
     if (val && val.trim()) {
         keyword.value = val
-        hasSearched.value = true
         currentPage.value = 1
         fetchContentList()
     }
