@@ -2,78 +2,78 @@
   <div class="header-container">
     <div class="header-bar">
       <button class="icon-btn left" @click="drawerVisible = true">
-        <el-icon><Operation /></el-icon>
+        <el-icon>
+          <Operation />
+        </el-icon>
       </button>
 
       <div class="header-title">GOWELL</div>
 
       <button class="icon-btn right" @click="onSearchClick">
-        <el-icon><Search /></el-icon>
+        <el-icon>
+          <Search />
+        </el-icon>
       </button>
     </div>
 
-    <el-drawer
-      v-model="drawerVisible"
-      :with-header="false"
-      direction="ltr"
-      :size="drawerSize"
-      class="side-drawer"
-    >
+    <el-drawer v-model="drawerVisible" :with-header="false" direction="ltr" :size="drawerSize" class="side-drawer">
       <div class="drawer-content">
         <img style="height: 50px; width: auto; padding: 16px 16px 0 16px;" src="../assets/favicon.svg" alt="logo">
         <div class="drawer-title">{{ store.getters.userInfo != null ? store.getters.userInfo.email : 'XXXX' }}</div>
-        <el-menu
-          class="menu"
-          background-color="#1e1e1e"
-          text-color="#e0e0e0"
-          active-text-color="#409eff"
-          @select="handleMenuSelect"
-        >
+        <el-menu class="menu" background-color="#1e1e1e" text-color="#e0e0e0" active-text-color="#409eff"
+          @select="handleMenuSelect">
           <el-menu-item index="1">
-            <el-icon><House /></el-icon>
-            <span >首页</span>
+            <el-icon>
+              <House />
+            </el-icon>
+            <span>首页</span>
           </el-menu-item>
           <el-menu-item index="2">
-            <el-icon><VideoCamera /></el-icon>
-            <span >视频</span>
+            <el-icon>
+              <VideoCamera />
+            </el-icon>
+            <span>视频</span>
           </el-menu-item>
           <el-menu-item index="3">
-            <el-icon><Picture /></el-icon>
-            <span >图片</span>
+            <el-icon>
+              <Picture />
+            </el-icon>
+            <span>图片</span>
           </el-menu-item>
           <div v-if="isAdmin">
-          <el-sub-menu index="4">
-            <template #title>
-              <el-icon><Upload /></el-icon>
-              <span>上传</span>
-            </template>
-            <el-menu-item index="4-1">
-              <el-icon><VideoCamera /></el-icon>
-              <span>上传视频</span>
-            </el-menu-item>
-            <el-menu-item index="4-2">
-              <el-icon><Picture /></el-icon>
-              <span>上传图片</span>
-            </el-menu-item>
-          </el-sub-menu>
-        </div>
+            <el-sub-menu index="4">
+              <template #title>
+                <el-icon>
+                  <Upload />
+                </el-icon>
+                <span>上传</span>
+              </template>
+              <el-menu-item index="4-1">
+                <el-icon>
+                  <VideoCamera />
+                </el-icon>
+                <span>上传视频</span>
+              </el-menu-item>
+              <el-menu-item index="4-2">
+                <el-icon>
+                  <Picture />
+                </el-icon>
+                <span>上传图片</span>
+              </el-menu-item>
+            </el-sub-menu>
+          </div>
         </el-menu>
-        
+
         <!-- 退出登录按钮区域 -->
         <div class="logout-section">
-          <el-button 
-            class="logout-btn" 
-            color="#121212"
-            @click="showLogoutConfirm"
-            :icon="SwitchButton"
-          >
+          <el-button class="logout-btn" color="#121212" @click="showLogoutConfirm" :icon="SwitchButton">
             退出登录
           </el-button>
         </div>
       </div>
     </el-drawer>
   </div>
-  
+
 </template>
 
 <script setup>
@@ -83,7 +83,7 @@ import { Search, Operation, House, VideoCamera, Picture, Upload, SwitchButton } 
 import { removeLocalStorage } from '@/utils/common'
 import { useRouter, useRoute } from 'vue-router'
 import { logout } from '@/api/layout/Layout'
-import  store  from '@/store';
+import store from '@/store';
 
 const router = useRouter()
 const route = useRoute()
@@ -91,14 +91,14 @@ const drawerVisible = ref(false)
 const isAdmin = ref(false)
 
 const onSearchClick = () => {
-  if (route.path == "/video" || route.path.split('/')[1] == "videoDetail" ){
+  if (route.path == "/video" || route.path.split('/')[1] == "videoDetail") {
     router.push("/search/1")
-  }else if (route.path == "/photo" || route.path.split('/')[1] == "photoDetail" ){
+  } else if (route.path == "/photo" || route.path.split('/')[1] == "photoDetail") {
     router.push("/search/2")
-  }else{
+  } else {
     router.push("/search/0")
   }
-  
+
 }
 
 const drawerSize = computed(() => {
@@ -124,27 +124,27 @@ const showLogoutConfirm = () => {
 }
 
 // 处理退出登录
- const handleLogout = async () => {
-   try {
-     // 调用退出登录API
+const handleLogout = async () => {
+  try {
+    // 调用退出登录API
     await logout()
-     // 清除本地存储的用户信息
+    // 清除本地存储的用户信息
     store.commit('setUserInfo', null)
     removeLocalStorage("token")
     removeLocalStorage("expires_time")
-     // 关闭侧边栏
-     drawerVisible.value = false
-     // 跳转到登录页面
-     router.push('/login')
-     ElMessage.success('已成功退出登录')
-   } catch (error) {
-     ElMessage.error('退出登录失败，请重试')
-   }
- }
+    // 关闭侧边栏
+    drawerVisible.value = false
+    // 跳转到登录页面
+    router.push('/login')
+    ElMessage.success('已成功退出登录')
+  } catch (error) {
+    ElMessage.error('退出登录失败，请重试')
+  }
+}
 
- const handleMenuSelect = (key) => {
+const handleMenuSelect = (key) => {
   drawerVisible.value = false
-  switch(key) {
+  switch (key) {
     case '1': router.push('/'); break
     case '2': router.push('/video'); break
     case '3': router.push('/photo'); break
@@ -155,8 +155,18 @@ const showLogoutConfirm = () => {
 }
 
 const checkIsAdmin = () => {
-  if (store.getters.userInfo.role_id == 2){
-    isAdmin.value=true
+  try {
+    if (store.getters.userInfo.role_id == 2) {
+      isAdmin.value = true
+    } else {
+      isAdmin.value = false
+    }
+  }
+  catch {
+    router.push({
+      path: "/login",
+      query: { key: "timeout" }
+    })
   }
 }
 
@@ -311,6 +321,7 @@ checkIsAdmin()
   .header-bar {
     height: 52px;
   }
+
   .icon-btn {
     width: 58px;
   }
