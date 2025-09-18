@@ -5,7 +5,7 @@
         <el-icon><Operation /></el-icon>
       </button>
 
-      <div class="header-title">网站标题</div>
+      <div class="header-title">GOWELL</div>
 
       <button class="icon-btn right" @click="onSearchClick">
         <el-icon><Search /></el-icon>
