@@ -77,12 +77,13 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute} from 'vue-router';
 import { getCaptcha, login } from '@/api/user/Login';
 import { setLocalStorage,removeLocalStorage } from '@/utils/common'
 import  store  from '@/store';
 
 const router = useRouter();
+const route = useRoute();
 
 
 // 表单引用
@@ -152,7 +153,7 @@ const handleLogin = () => {
           router.push('/')
         }else{
           loading.value = false;
-          ElMessage.error('登录失败');
+          ElMessage.error(res.msg || "登录失败");
           refreshCaptcha();
         }
       })
@@ -173,8 +174,15 @@ const goToForgotPassword = () =>{
 
 // 初始化验证码
 onMounted(() => {
+  const q = route.query?.key
+  if (q == "timeout"){
+    ElMessage.error("登录过期")
+  }
+
   refreshCaptcha();
 });
+
+
 </script>
 
 <style>

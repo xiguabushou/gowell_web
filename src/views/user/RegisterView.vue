@@ -243,7 +243,7 @@ const handleRegister = () => {
         
         } else {
           loading.value = false;
-          ElMessage.error(res.message || '注册失败，请重试');
+          ElMessage.error(res.msg || '注册失败，请重试');
         }
       }).catch(err => {
         console.log(err)

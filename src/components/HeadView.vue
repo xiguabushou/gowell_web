@@ -41,6 +41,7 @@
             <el-icon><Picture /></el-icon>
             <span >图片</span>
           </el-menu-item>
+          <div v-if="isAdmin">
           <el-sub-menu index="4">
             <template #title>
               <el-icon><Upload /></el-icon>
@@ -55,6 +56,7 @@
               <span>上传图片</span>
             </el-menu-item>
           </el-sub-menu>
+        </div>
         </el-menu>
         
         <!-- 退出登录按钮区域 -->
@@ -86,6 +88,7 @@ import  store  from '@/store';
 const router = useRouter()
 const route = useRoute()
 const drawerVisible = ref(false)
+const isAdmin = ref(false)
 
 const onSearchClick = () => {
   if (route.path == "/video" || route.path.split('/')[1] == "videoDetail" ){
@@ -151,6 +154,13 @@ const showLogoutConfirm = () => {
   }
 }
 
+const checkIsAdmin = () => {
+  if (store.getters.userInfo.role_id == 2){
+    isAdmin.value=true
+  }
+}
+
+checkIsAdmin()
 
 </script>
 

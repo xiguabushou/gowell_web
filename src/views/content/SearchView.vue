@@ -50,7 +50,7 @@ import { ElMessage } from 'element-plus'
 
 
 const currentPage = ref(1)
-const pageSize = ref(2) // 每页数量
+const pageSize = ref(5) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()

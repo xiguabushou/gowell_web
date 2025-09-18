@@ -13,7 +13,8 @@
 <style lang="css" scoped>
 .contain{
     overflow-y: auto;
-    height: calc(100vh - 52px);
+    height: calc(100vh - 56px);
+    background-color: #121212;
 }
 
 </style>

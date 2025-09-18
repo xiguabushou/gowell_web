@@ -167,7 +167,7 @@ watch(
 
 <style lang="css" scoped>
 .video-detail-container {
-  min-height: calc(100vh - 52px);
+  min-height: 100ch;
   background: #121212;
   padding: 12px 12px 22px;
   box-sizing: border-box;

@@ -25,7 +25,10 @@ instance.interceptors.response.use(function (response) {
     // console.log(response)
     //如果是token出现异常，返回的登录页面
     if(response.data.code == 9 ){
-        router.push("/login")
+        router.push({
+            path:"/login",
+            query:{key:"timeout"}
+        })
     }
    
     return response.data;
