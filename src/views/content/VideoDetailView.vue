@@ -51,7 +51,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getInfo } from '@/api/content/VideoDetail'
+import { getInfo } from '@/api/content'
 
 const route = useRoute()
 const router = useRouter()

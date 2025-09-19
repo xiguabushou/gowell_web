@@ -36,7 +36,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getList } from '@/api/content/Home'
+import { getList } from '@/api/content'
 
 
 const currentPage = ref(1)

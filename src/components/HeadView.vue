@@ -61,6 +61,24 @@
                 <span>上传图片</span>
               </el-menu-item>
             </el-sub-menu>
+            <el-sub-menu index="5">
+              <template #title>
+                <el-icon><User /></el-icon>
+                <span>用户</span>
+              </template>
+              <el-menu-item index="5-1">
+                <el-icon><Promotion /></el-icon>
+                <span>VIP申请</span>
+              </el-menu-item>
+              <el-menu-item index="5-2">
+                <el-icon><Avatar /></el-icon>
+                <span>用户管理</span>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-menu-item index="6">
+              <el-icon><EditPen /></el-icon>
+            <span>内容编辑</span>
+          </el-menu-item>
           </div>
         </el-menu>
 
@@ -82,7 +100,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Operation, House, VideoCamera, Picture, Upload, SwitchButton } from '@element-plus/icons-vue'
 import { removeLocalStorage } from '@/utils/common'
 import { useRouter, useRoute } from 'vue-router'
-import { logout } from '@/api/layout/Layout'
+import { logout } from '@/api/user'
 import store from '@/store';
 
 const router = useRouter()
@@ -150,6 +168,7 @@ const handleMenuSelect = (key) => {
     case '3': router.push('/photo'); break
     case '4-1': router.push('/uploadVideo'); break
     case '4-2': router.push('/uploadPhoto'); break
+    case '5-1': router.push('/askForVipList');break
     default: break
   }
 }
@@ -265,6 +284,8 @@ checkIsAdmin()
   height: 100%;
   display: flex;
   flex-direction: column;
+  /* 允许子项在弹性容器内正确滚动 */
+  min-height: 0;
 }
 
 .drawer-title {
@@ -279,7 +300,9 @@ checkIsAdmin()
   border: none;
   width: 100%;
   background-color: #1e1e1e;
-  flex: 1;
+  /* 占据剩余空间并启用内部滚动，避免挤压底部按钮 */
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 /* 统一菜单深色风格并避免浅色 hover/active */
@@ -301,6 +324,8 @@ checkIsAdmin()
   padding: 16px;
   border-top: 1px solid #333;
   background-color: #1e1e1e;
+  /* 始终固定在抽屉底部 */
+  margin-top: auto;
 }
 
 .logout-btn {

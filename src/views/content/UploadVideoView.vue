@@ -92,7 +92,7 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { uploadVideo } from '@/api/content/UploadVideo'
+import { uploadVideo } from '@/api/content'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()
@@ -281,7 +281,7 @@ const dataURLToBlob = (dataURL) => {
 <style lang="css" scoped>
 .upload-container {
   min-height: 100vh;
-  background: #121212;
+  background: #f5f5f5;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -292,6 +292,11 @@ const dataURLToBlob = (dataURL) => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
 
 .form-group {
@@ -301,17 +306,17 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .form-label {
-  color: #e0e0e0;
+  color: #333;
   font-size: 16px;
   font-weight: 500;
 }
 
 .form-input {
   padding: 12px 16px;
-  background: #2d2d2d;
-  border: 1px solid #444;
+  background: white;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  color: #e0e0e0;
+  color: #333;
   font-size: 14px;
   outline: none;
   transition: border-color 0.3s;
@@ -322,11 +327,11 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .form-input::placeholder {
-  color: #666;
+  color: #999;
 }
 
 .upload-area {
-  border: 2px dashed #444;
+  border: 2px dashed #ddd;
   border-radius: 12px;
   min-height: 200px;
   display: flex;
@@ -337,11 +342,11 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .upload-area:hover {
-  border-color: #666;
+  border-color: #409eff;
 }
 
 .upload-placeholder {
-  color: #e0e0e0;
+  color: #666;
   font-size: 18px;
   font-weight: 500;
 }
@@ -371,13 +376,13 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .video-name {
-  color: #e0e0e0;
+  color: #333;
   font-size: 14px;
   font-weight: 500;
 }
 
 .video-duration {
-  color: #999;
+  color: #666;
   font-size: 12px;
 }
 
@@ -388,7 +393,7 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .slider-label {
-  color: #e0e0e0;
+  color: #333;
   font-size: 14px;
   font-weight: 500;
 }
@@ -402,7 +407,7 @@ const dataURLToBlob = (dataURL) => {
 .time-slider {
   flex: 1;
   height: 6px;
-  background: #2d2d2d;
+  background: #e0e0e0;
   border-radius: 3px;
   outline: none;
   -webkit-appearance: none;
@@ -440,7 +445,7 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .time-display {
-  color: #e0e0e0;
+  color: #333;
   font-size: 14px;
   font-weight: 500;
   min-width: 50px;
@@ -466,14 +471,14 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .btn-cancel {
-  background: #2d2d2d;
-  color: #e0e0e0;
-  border: 1px solid #444;
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
 }
 
 .btn-cancel:hover {
-  background: #3d3d3d;
-  border-color: #666;
+  background: #f5f5f5;
+  border-color: #409eff;
 }
 
 .btn-submit {
@@ -486,7 +491,7 @@ const dataURLToBlob = (dataURL) => {
 }
 
 .btn-submit:disabled {
-  background: #666;
+  background: #c0c4cc;
   cursor: not-allowed;
   opacity: 0.6;
 }

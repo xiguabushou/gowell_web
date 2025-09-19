@@ -60,7 +60,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import { getCaptcha, forgotPassword } from '@/api/user/ForgetPassword';
+import { forgotPassword } from '@/api/user';
+import { getCaptcha } from '@/api/base';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()

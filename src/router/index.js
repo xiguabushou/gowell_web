@@ -41,6 +41,11 @@ const routes = [
         path: '/photoDetail/:uid',
         name: 'photoDetail',
         component: () => import( '../views/content/PhotoDetailView.vue')
+      },
+      {
+        path: '/askForVipList',
+        name: 'askForVipList',
+        component: () => import( '../views/admin/AskForVipListView.vue')
       }
     ]
   },

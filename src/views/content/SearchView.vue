@@ -44,7 +44,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute} from 'vue-router'
-import { getList } from '@/api/content/Search'
+import { getList } from '@/api/content'
 import { ElMessage } from 'element-plus'
 
 

@@ -34,7 +34,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
-import { resetForgotPassword } from '@/api/user/ResetForgotPassword';
+import { resetForgotPassword } from '@/api/user';
 
 const router = useRouter();
 const route = useRoute();

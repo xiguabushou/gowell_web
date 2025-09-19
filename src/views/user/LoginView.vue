@@ -78,7 +78,8 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute} from 'vue-router';
-import { getCaptcha, login } from '@/api/user/Login';
+import { login } from '@/api/user';
+import { getCaptcha } from '@/api/base';
 import { setLocalStorage,removeLocalStorage } from '@/utils/common'
 import  store  from '@/store';
 

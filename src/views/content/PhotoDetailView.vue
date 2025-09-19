@@ -43,7 +43,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getInfo } from '@/api/content/PhotoDetail'
+import { getInfo } from '@/api/content'
 
 const route = useRoute()
 const router = useRouter()

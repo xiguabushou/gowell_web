@@ -111,7 +111,8 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import { getCaptcha, sendEmailCode, register } from '@/api/user/Register';
+import { register } from '@/api/user';
+import { getCaptcha, sendEmailCode } from '@/api/base';
 import { setLocalStorage,removeLocalStorage } from '@/utils/common'
 
 const router = useRouter();
