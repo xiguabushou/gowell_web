@@ -6,7 +6,12 @@
         <!-- 权限筛选 -->
         <div class="filter-group">
           <label class="filter-label">权限:</label>
-          <el-select v-model="selectedRole" class="filter-select" placeholder="全部" @change="handleSearch">
+          <el-select
+            v-model="selectedRole"
+            class="filter-select"
+            placeholder="全部"
+            @change="handleSearch"
+          >
             <el-option label="全部" value="" />
             <el-option label="用户" value="user" />
             <el-option label="会员" value="member" />
@@ -17,7 +22,12 @@
         <!-- 状态筛选 -->
         <div class="filter-group">
           <label class="filter-label">状态:</label>
-          <el-select v-model="selectedStatus" class="filter-select" placeholder="全部" @change="handleSearch">
+          <el-select
+            v-model="selectedStatus"
+            class="filter-select"
+            placeholder="全部"
+            @change="handleSearch"
+          >
             <el-option label="全部" value="" />
             <el-option label="正常" value="active" />
             <el-option label="禁用" value="inactive" />
@@ -26,10 +36,10 @@
 
         <!-- 搜索框 -->
         <div class="search-group">
-          <input 
-            v-model="searchKeyword" 
-            type="text" 
-            placeholder="请输入邮箱或用户名搜索..." 
+          <input
+            v-model="searchKeyword"
+            type="text"
+            placeholder="请输入邮箱或用户名搜索..."
             class="search-input"
             @keyup.enter="handleSearch"
           />
@@ -69,7 +79,11 @@
           </thead>
           <!-- 表格数据行 -->
           <tbody>
-            <tr v-for="(user, index) in userList" :key="index" class="table-row">
+            <tr
+              v-for="(user, index) in userList"
+              :key="index"
+              class="table-row"
+            >
               <td class="col-id">{{ index + 1 }}</td>
               <td class="col-email">{{ user.email }}</td>
               <td class="col-role">
@@ -79,21 +93,28 @@
               </td>
               <td class="col-created">{{ formatDate(user.created_at) }}</td>
               <td class="col-status">
-                <span :class="['status-badge', user.status === 'active' ? 'status-active' : 'status-inactive']">
-                  {{ user.status === 'active' ? '正常' : '禁用' }}
+                <span
+                  :class="[
+                    'status-badge',
+                    user.status === 'active'
+                      ? 'status-active'
+                      : 'status-inactive',
+                  ]"
+                >
+                  {{ user.status === "active" ? "正常" : "禁用" }}
                 </span>
               </td>
               <td class="col-actions">
                 <div class="action-buttons">
-                  <button 
-                    class="btn btn-sm btn-edit" 
+                  <button
+                    class="btn btn-sm btn-edit"
                     @click="doEditUser(user)"
                     title="编辑用户"
                   >
                     编辑
                   </button>
-                  <button 
-                    class="btn btn-sm btn-delete" 
+                  <button
+                    class="btn btn-sm btn-delete"
                     @click="doDeleteUser(user)"
                     title="删除用户"
                   >
@@ -119,13 +140,13 @@
     </div>
 
     <!-- 编辑用户弹窗 -->
-    <el-dialog 
-      v-model="showEditDialog" 
-      title="编辑用户" 
-      width="520px" 
-      :close-on-click-modal="false" 
-      align-center 
-      append-to-body 
+    <el-dialog
+      v-model="showEditDialog"
+      title="编辑用户"
+      :width="dialogWidth"
+      :close-on-click-modal="false"
+      align-center
+      append-to-body
       modal-class="centered-dialog-overlay"
     >
       <div class="edit-form">
@@ -138,12 +159,16 @@
           <div class="form-value">{{ formatDate(editForm.created_at) }}</div>
         </div>
         <div class="form-item">
-          <label class="form-label">最近更新时间：</label>
+          <label class="form-label">最近更新：</label>
           <div class="form-value">{{ formatDate(editForm.updated_at) }}</div>
         </div>
         <div class="form-item">
           <label class="form-label">权限：</label>
-          <el-select v-model="editForm.role" class="dialog-select" placeholder="请选择">
+          <el-select
+            v-model="editForm.role"
+            class="dialog-select"
+            placeholder="请选择"
+          >
             <el-option label="用户" value="user" />
             <el-option label="会员" value="member" />
             <el-option label="管理员" value="admin" />
@@ -151,14 +176,23 @@
         </div>
         <div class="form-item">
           <label class="form-label">状态：</label>
-          <el-select v-model="editForm.status" class="dialog-select" placeholder="请选择">
+          <el-select
+            v-model="editForm.status"
+            class="dialog-select"
+            placeholder="请选择"
+          >
             <el-option label="正常" value="active" />
             <el-option label="禁用" value="inactive" />
           </el-select>
         </div>
         <div class="form-item">
           <label class="form-label">密码：</label>
-          <input v-model="editForm.password" type="password" class="dialog-input" placeholder="如需重置请输入新密码" />
+          <input
+            v-model="editForm.password"
+            type="password"
+            class="dialog-input"
+            placeholder="如需重置请输入新密码"
+          />
         </div>
       </div>
       <template #footer>
@@ -168,128 +202,128 @@
         </div>
       </template>
     </el-dialog>
-    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { getUserList, deleteUser, editUser } from '@/api/user'
+import { ref, onMounted, computed } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { getUserList, deleteUser, editUser } from "@/api/user";
 
 // 响应式数据
-const currentPage = ref(1)
-const pageSize = ref(10) // 每页显示数量
-const total = ref(0)
-const userList = ref([])
-const loading = ref(false)
+const currentPage = ref(1);
+const pageSize = ref(10); // 每页显示数量
+const total = ref(0);
+const userList = ref([]);
+const loading = ref(false);
 
 // 搜索相关数据
-const selectedRole = ref('') // 选中的权限
-const selectedStatus = ref('') // 选中的状态
-const searchKeyword = ref('') // 搜索关键词
+const selectedRole = ref(""); // 选中的权限
+const selectedStatus = ref(""); // 选中的状态
+const searchKeyword = ref(""); // 搜索关键词
 
 // 编辑弹窗
-const showEditDialog = ref(false)
+const showEditDialog = ref(false);
 const editForm = ref({
-  uuid: '',
-  email: '',
-  created_at: '',
-  updated_at: '',
-  role: 'user',
-  status: 'active',
-  password: ''
-})
+  uuid: "",
+  email: "",
+  created_at: "",
+  updated_at: "",
+  role: "user",
+  status: "active",
+  password: "",
+});
 
 // 格式化日期函数
 const formatDate = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day} ${hours}:${minutes}`
-}
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
 
 // 获取权限文本
 const getRoleText = (role) => {
   const roleMap = {
-    'user': '用户',
-    'member': '会员',
-    'admin': '管理员'
-  }
-  return roleMap[role] || '未知'
-}
+    user: "用户",
+    member: "会员",
+    admin: "管理员",
+  };
+  return roleMap[role] || "未知";
+};
 
 // 获取权限样式类
 const getRoleClass = (role) => {
   const classMap = {
-    'user': 'role-user',
-    'member': 'role-member',
-    'admin': 'role-admin'
-  }
-  return classMap[role] || 'role-unknown'
-}
+    user: "role-user",
+    member: "role-member",
+    admin: "role-admin",
+  };
+  return classMap[role] || "role-unknown";
+};
 
 // 获取用户列表数据（调用后端接口）
 async function fetchUserList() {
-  loading.value = true
+  loading.value = true;
   try {
     // 将前端筛选条件映射为后端参数
-    const roleMap = { '': '9', 'user': '0', 'member': '1', 'admin': '2' }
-    const statusMap = { '': '9', 'active': '0', 'inactive': '1' }
+    const roleMap = { "": "9", user: "0", member: "1", admin: "2" };
+    const statusMap = { "": "9", active: "0", inactive: "1" };
 
     const params = {
       page: String(currentPage.value),
       page_size: String(pageSize.value),
-      role_id: roleMap[selectedRole.value] ?? '9',
-      is_freeze: statusMap[selectedStatus.value] ?? '9',
-      search: searchKeyword.value || ''
-    }
+      role_id: roleMap[selectedRole.value] ?? "9",
+      is_freeze: statusMap[selectedStatus.value] ?? "9",
+      search: searchKeyword.value || "",
+    };
 
-    const res = await getUserList(params)
+    const res = await getUserList(params);
 
     if (res && res.code === 0 && res.data) {
-      const apiList = Array.isArray(res.data.list) ? res.data.list : []
-      const mapRole = { 0: 'user', 1: 'member', 2: 'admin' }
+      const apiList = Array.isArray(res.data.list) ? res.data.list : [];
+      const mapRole = { 0: "user", 1: "member", 2: "admin" };
       // 适配后端字段到表格所需字段
-      userList.value = apiList.map(item => ({
+      userList.value = apiList.map((item) => ({
         uuid: item.uuid,
         email: item.email,
-        role: mapRole[item.role_id] ?? 'user',
+        role: mapRole[item.role_id] ?? "user",
         created_at: item.CreatedAt,
         updated_at: item.UpdatedAt,
-        status: item.freeze ? 'inactive' : 'active'
-      }))
-      total.value = Number(res.data.total || 0)
+        status: item.freeze ? "inactive" : "active",
+      }));
+      total.value = Number(res.data.total || 0);
     } else {
-      console.error('获取用户列表失败:', res?.msg)
-      userList.value = []
-      total.value = 0
-      if (res?.msg) ElMessage.error(res.msg)
+      console.error("获取用户列表失败:", res?.msg);
+      userList.value = [];
+      total.value = 0;
+      if (res?.msg) ElMessage.error(res.msg);
     }
   } catch (error) {
-    console.error('请求用户列表出错:', error)
-    userList.value = []
-    total.value = 0
-    ElMessage.error('获取用户列表失败')
+    console.error("请求用户列表出错:", error);
+    userList.value = [];
+    total.value = 0;
+    ElMessage.error("获取用户列表失败");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 // 分页变化处理
 const onPageChange = (newPage) => {
-  currentPage.value = newPage
-  fetchUserList()
-}
+  currentPage.value = newPage;
+  fetchUserList();
+};
 
 // 搜索处理函数
 const handleSearch = () => {
-  currentPage.value = 1 // 重置到第一页
-  fetchUserList()
-}
+  currentPage.value = 1; // 重置到第一页
+  fetchUserList();
+};
 
 // 编辑用户
 const doEditUser = (user) => {
@@ -300,79 +334,84 @@ const doEditUser = (user) => {
     updated_at: user.updated_at,
     role: user.role,
     status: user.status,
-    password: ''
-  }
-  showEditDialog.value = true
-}
+    password: "",
+  };
+  showEditDialog.value = true;
+};
 
 const submitEdit = async () => {
-  let roleId 
-  let freeze 
-  if (editForm.value.role == 'admin'){
-    roleId = 2
-  }else if(editForm.value.role == 'member'){
-    roleId = 1
-  }else{
-    roleId = 0
+  let roleId;
+  let freeze;
+  if (editForm.value.role == "admin") {
+    roleId = 2;
+  } else if (editForm.value.role == "member") {
+    roleId = 1;
+  } else {
+    roleId = 0;
   }
 
-  if (editForm.value.status == 'active'){
-    freeze = false
-  }else{
-    freeze = true
+  if (editForm.value.status == "active") {
+    freeze = false;
+  } else {
+    freeze = true;
   }
-
 
   const data = {
     uuid: editForm.value.uuid,
-    role_id:roleId,
-    freeze:freeze,
-    password:editForm.value.password
-  }
-  // try{
-  const res = await editUser(data)
-  if (res.code == 0){
-        ElMessage.success('提交成功')
-        showEditDialog.value = false
-        fetchUserList()
-    }else{
-        ElMessage.error(res.msg)
+    role_id: roleId,
+    freeze: freeze,
+    password: editForm.value.password,
+  };
+  try {
+    const res = await editUser(data);
+    if (res.code == 0) {
+      ElMessage.success("提交成功");
+      showEditDialog.value = false;
+      fetchUserList();
+    } else {
+      ElMessage.error(res.msg);
     }
-  // }catch{
-  //   ElMessage.error("提交失败！")
-  // }
-}
+  } catch {
+    ElMessage.error("提交失败！");
+  }
+};
 
 // 删除用户
 const doDeleteUser = async (user) => {
   try {
     await ElMessageBox.confirm(
       `确定要删除用户 "${user.email}" 吗？此操作不可恢复！`,
-      '确认删除',
+      "确认删除",
       {
-        confirmButtonText: '确定删除',
-        cancelButtonText: '取消',
-        type: 'warning',
+        confirmButtonText: "确定删除",
+        cancelButtonText: "取消",
+        type: "warning",
       }
-    )
-    
-    const res = await deleteUser({id: user.uuid})
-    if (res.code == 0){
-        ElMessage.success("删除成功！")
-    }else{
-        ElMessage.error("删除失败！")
+    );
+
+    const res = await deleteUser({ id: user.uuid });
+    if (res.code == 0) {
+      ElMessage.success("删除成功！");
+    } else {
+      ElMessage.error("删除失败！");
     }
 
-    fetchUserList()
+    fetchUserList();
   } catch {
-    ElMessage.error("删除失败")
+    ElMessage.error("删除失败");
   }
-}
+};
+
+// 动态宽度
+const dialogWidth = computed(() => {
+  const windowWidth = window.innerWidth
+  return windowWidth < 500 ? '90%' : '500px'
+})
 
 // 组件挂载时加载数据
 onMounted(() => {
-  fetchUserList()
-})
+  fetchUserList();
+});
 </script>
 
 <style lang="css" scoped>
@@ -534,13 +573,27 @@ onMounted(() => {
 }
 
 /* 列宽设置 */
-.col-id { width: 80px; }
-.col-email { width: 200px; }
-.col-username { width: 120px; }
-.col-role { width: 100px; }
-.col-created { width: 150px; }
-.col-status { width: 100px; }
-.col-actions { width: 150px; }
+.col-id {
+  width: 80px;
+}
+.col-email {
+  width: 200px;
+}
+.col-username {
+  width: 120px;
+}
+.col-role {
+  width: 100px;
+}
+.col-created {
+  width: 150px;
+}
+.col-status {
+  width: 100px;
+}
+.col-actions {
+  width: 150px;
+}
 
 /* 徽章样式 */
 .role-badge,
@@ -725,13 +778,13 @@ onMounted(() => {
   color: #333;
 }
 
-.dialog-input{
-    flex: 1;
+.dialog-input {
+  flex: 1;
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;  
+  color: #333;
 }
 
 .dialog-footer {
@@ -741,7 +794,7 @@ onMounted(() => {
 
 /* 弹窗通用适配 */
 :deep(.el-dialog) {
-  width: min(520px, 92vw) !important;
+  width: min(520px, 92vw);
   max-width: 92vw;
 }
 
@@ -762,30 +815,30 @@ onMounted(() => {
   .user-management-container {
     padding: 10px;
   }
-  
+
   .search-container {
     flex-direction: column;
     align-items: stretch;
     gap: 15px;
   }
-  
+
   .filter-group {
     justify-content: space-between;
   }
-  
+
   .search-group {
     min-width: auto;
   }
-  
+
   .user-table {
     font-size: 12px;
   }
-  
+
   .user-table th,
   .user-table td {
     padding: 10px 8px;
   }
-  
+
   .action-buttons {
     flex-direction: column;
     gap: 4px;
@@ -793,7 +846,7 @@ onMounted(() => {
 
   /* 弹窗在移动端的自适配 */
   :deep(.el-dialog) {
-    width: 92vw !important;
+    width: 92vw;
     margin: 0 auto;
   }
 
@@ -805,7 +858,9 @@ onMounted(() => {
     width: 80px;
   }
 
-  .dialog-select, .dialog-input, .form-value {
+  .dialog-select,
+  .dialog-input,
+  .form-value {
     width: 100%;
   }
 }
