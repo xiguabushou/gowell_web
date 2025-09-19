@@ -46,6 +46,11 @@ const routes = [
         path: '/askForVipList',
         name: 'askForVipList',
         component: () => import( '../views/admin/AskForVipListView.vue')
+      },
+      {
+        path: '/userManagement',
+        name: 'userManagement',
+        component: () => import( '../views/admin/UserManagementView.vue')
       }
     ]
   },

@@ -169,6 +169,7 @@ const handleMenuSelect = (key) => {
     case '4-1': router.push('/uploadVideo'); break
     case '4-2': router.push('/uploadPhoto'); break
     case '5-1': router.push('/askForVipList');break
+    case '5-2': router.push('/userManagement');break
     default: break
   }
 }

@@ -1,6 +1,12 @@
 <template>
   <div class="ask-for-vip-container">
-    <div class="application-list">
+    <div v-if="loading" class="loading-wrapper">
+      <div class="loading-text">加载中...</div>
+    </div>
+    <div v-else-if="filteredData.length === 0" class="empty-wrapper">
+      <div class="empty-text">暂无申请记录</div>
+    </div>
+    <div v-else class="application-list">
       <div
         v-for="application in filteredData"
         :key="application.id"
@@ -8,28 +14,30 @@
       >
         <div class="applicant-info">
           <span class="label">申请人:</span>
-          <span class="value">{{ application.applicant }}</span>
+          <span class="value">{{ application.email }}</span>
         </div>
         <div class="application-time">
           <span class="label">申请时间:</span>
-          <span class="value">{{ application.applicationTime }}</span>
+          <span class="value">{{ formatDate(application.CreatedAt) }}</span>
         </div>
         <div class="application-content">
           <div class="content-label">申请内容</div>
-          <div class="content-text">{{ application.content }}</div>
+          <div class="content-text">{{ application.message }}</div>
         </div>
         <div class="action-buttons">
           <button 
             class="btn btn-agree" 
+            :disabled="processingIds.has(application.id)"
             @click="handleApplication(application.id, 'approve')"
           >
-            同意
+            {{ processingIds.has(application.id) ? '处理中...' : '同意' }}
           </button>
           <button 
             class="btn btn-disagree" 
+            :disabled="processingIds.has(application.id)"
             @click="handleApplication(application.id, 'reject')"
           >
-            不同意
+            {{ processingIds.has(application.id) ? '处理中...' : '不同意' }}
           </button>
         </div>
       </div>
@@ -49,95 +57,51 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { getListAboutAskForVip, approvingForVip } from '@/api/user'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const currentPage = ref(1)
 const pageSize = ref(10) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
+const loading = ref(false)
+const processingIds = ref(new Set()) // 正在处理的申请ID
 
-// 本地mock数据
-const mockApplications = [
-  {
-    id: 1,
-    applicant: 'zhangsan@qq.com',
-    applicationTime: '2025.01.21',
-    content: '我希望申请VIP会员，以便享受更多高级功能和更好的服务体验。我承诺遵守平台规则，希望能获得批准。'
-  },
-  {
-    id: 2,
-    applicant: 'lisi@qq.com',
-    applicationTime: '2025.01.20',
-    content: '申请VIP会员，用于商业用途，希望能够获得更多存储空间和优先客服支持。'
-  },
-  {
-    id: 3,
-    applicant: 'wangwu@qq.com',
-    applicationTime: '2025.01.19',
-    content: '个人用户申请VIP，希望能够上传更多高清视频内容，享受无广告观看体验。'
-  },
-  {
-    id: 4,
-    applicant: 'zhaoliu@qq.com',
-    applicationTime: '2025.01.18',
-    content: '企业用户申请VIP，用于团队协作和内容管理，需要更高的存储配额。'
-  },
-  {
-    id: 5,
-    applicant: 'chenqi@qq.com',
-    applicationTime: '2025.01.17',
-    content: '申请VIP会员，希望能够享受更快的上传下载速度和更多的功能权限。'
-  },
-  {
-    id: 6,
-    applicant: 'liuba@qq.com',
-    applicationTime: '2025.01.16',
-    content: '内容创作者申请VIP，需要更大的存储空间和更高质量的视频处理服务。'
-  },
-  {
-    id: 7,
-    applicant: 'sunjiu@qq.com',
-    applicationTime: '2025.01.15',
-    content: '希望申请VIP会员，享受优先客服支持和更多高级功能的访问权限。'
-  },
-  {
-    id: 8,
-    applicant: 'zhouyi@qq.com',
-    applicationTime: '2025.01.14',
-    content: '个人用户申请VIP，主要用于学习和研究目的，希望能够获得更好的服务体验。'
-  },
-  {
-    id: 9,
-    applicant: 'wuer@qq.com',
-    applicationTime: '2025.01.13',
-    content: '申请VIP会员用于商业推广，需要更大的带宽和存储空间支持。'
-  },
-  {
-    id: 10,
-    applicant: 'zhengshi@qq.com',
-    applicationTime: '2025.01.12',
-    content: '内容制作团队申请VIP，需要协作功能和更高的上传限制。'
-  },
-  {
-    id: 11,
-    applicant: 'wangshi@qq.com',
-    applicationTime: '2025.01.11',
-    content: '教育机构申请VIP，用于在线教学和课程内容管理。'
-  },
-  {
-    id: 12,
-    applicant: 'fengshi@qq.com',
-    applicationTime: '2025.01.10',
-    content: '个人申请VIP会员，希望能够享受无广告观看和更快的下载速度。'
-  }
-]
+// 格式化日期
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}.${month}.${day}`
+}
 
 // 获取申请列表数据
-function fetchApplicationList() {
-  const startIndex = (currentPage.value - 1) * pageSize.value
-  const endIndex = startIndex + pageSize.value
-  
-  total.value = mockApplications.length
-  filteredData.value = mockApplications.slice(startIndex, endIndex)
+async function fetchApplicationList() {
+  loading.value = true
+  try {
+    const params = {
+      page: currentPage.value,
+      page_size: pageSize.value,
+    }
+    const res = await getListAboutAskForVip(params)
+    
+    if (res.code === 0 && res.data) {
+      total.value = res.data.total || 0
+      filteredData.value = res.data.list || []
+    } else {
+      console.error('获取申请列表失败:', res.msg)
+      filteredData.value = []
+      total.value = 0
+    }
+  } catch (error) {
+    console.error('请求申请列表出错:', error)
+    filteredData.value = []
+    total.value = 0
+  } finally {
+    loading.value = false
+  }
 }
 
 // 分页变化处理
@@ -147,28 +111,58 @@ const onPageChange = (newPage) => {
 }
 
 // 处理申请（同意/不同意）
-const handleApplication = (applicationId, action) => {
-  const application = mockApplications.find(app => app.id === applicationId)
+const handleApplication = async (applicationId, action) => {
+  const application = filteredData.value.find(app => app.id === applicationId)
   if (!application) return
   
-  if (action === 'approve') {
-    console.log(`同意申请: ${application.applicant}`)
-    // 这里可以调用API处理同意逻辑
-    // 模拟处理成功后从列表中移除
-    const index = mockApplications.findIndex(app => app.id === applicationId)
-    if (index > -1) {
-      mockApplications.splice(index, 1)
-      fetchApplicationList()
+  // 防止重复提交
+  if (processingIds.value.has(applicationId)) {
+    return
+  }
+  
+  // 确认操作
+  const actionText = action === 'approve' ? '同意' : '拒绝'
+  const confirmText = action === 'approve' ? '确定要同意此VIP申请吗？' : '确定要拒绝此VIP申请吗？'
+  
+  try {
+    await ElMessageBox.confirm(
+      confirmText,
+      '确认操作',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: action === 'approve' ? 'success' : 'warning',
+      }
+    )
+  } catch {
+    // 用户取消操作
+    return
+  }
+  
+  // 添加到处理中状态
+  processingIds.value.add(applicationId)
+  
+  try {
+    const data = {
+      uuid: application.uuid,
+      is_pass: action === 'approve'
     }
-  } else if (action === 'reject') {
-    console.log(`拒绝申请: ${application.applicant}`)
-    // 这里可以调用API处理拒绝逻辑
-    // 模拟处理成功后从列表中移除
-    const index = mockApplications.findIndex(app => app.id === applicationId)
-    if (index > -1) {
-      mockApplications.splice(index, 1)
+    
+    const res = await approvingForVip(data)
+    
+    if (res.code === 0) {
+      ElMessage.success(`${actionText}成功！`)
+      // 审批成功后重新加载列表
       fetchApplicationList()
+    } else {
+      ElMessage.error(`${actionText}失败: ${res.msg || '未知错误'}`)
     }
+  } catch (error) {
+    console.error('审批请求出错:', error)
+    ElMessage.error(`${actionText}失败: 网络错误`)
+  } finally {
+    // 移除处理中状态
+    processingIds.value.delete(applicationId)
   }
 }
 
@@ -257,6 +251,11 @@ onMounted(() => {
   min-width: 80px;
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-agree {
   background: #f0f9ff;
   color: #1890ff;
@@ -316,6 +315,22 @@ onMounted(() => {
 
 :deep(.el-pagination .el-input__inner) {
   color: #333 !important;
+}
+
+.loading-wrapper,
+.empty-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  text-align: center;
+}
+
+.loading-text,
+.empty-text {
+  font-size: 16px;
+  color: #666;
+  padding: 20px;
 }
 
 @media (min-width: 768px) {
