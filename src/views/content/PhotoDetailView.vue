@@ -255,4 +255,10 @@ watch(
     font-size: 14px;
     text-align: center;
 }
+@media (min-width: 1024px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
 </style>

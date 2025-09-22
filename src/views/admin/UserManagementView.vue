@@ -81,7 +81,7 @@
           <tbody>
             <tr
               v-for="(user, index) in userList"
-              :key="index"
+              :key="user.uuid"
               class="table-row"
             >
               <td class="col-id">{{ index + 1 }}</td>

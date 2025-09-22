@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="header-bar">
-      <button class="icon-btn left" @click="drawerVisible = true">
+      <button class="icon-btn" @click="drawerVisible = true">
         <el-icon>
           <Operation />
         </el-icon>
@@ -9,7 +9,7 @@
 
       <div class="header-title">GOWELL</div>
 
-      <button class="icon-btn right" @click="onSearchClick">
+      <button class="icon-btn" @click="onSearchClick">
         <el-icon>
           <Search />
         </el-icon>
@@ -227,16 +227,6 @@ checkIsAdmin()
 
 .icon-btn:hover {
   background-color: rgba(255, 255, 255, 0.06);
-}
-
-.icon-btn.right {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
-.icon-btn.left {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
 }
 
 .header-title {

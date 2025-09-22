@@ -1,7 +1,7 @@
 <template>
     <div class="header-container">
         <div class="header-bar">
-            <button class="icon-btn left" @click="goBackHome">
+            <button class="icon-btn" @click="goBackHome">
                 <el-icon><ArrowLeft /></el-icon>
             </button>
 
@@ -13,7 +13,7 @@
                 @keyup.enter="onSearch"
             />
 
-            <button class="icon-btn right" @click="onSearch">
+            <button class="icon-btn" @click="onSearch">
                 <el-icon><Check /></el-icon>
             </button>
         </div>
@@ -50,7 +50,7 @@ import { ElMessage } from 'element-plus'
 
 
 const currentPage = ref(1)
-const pageSize = ref(5) // 每页数量
+const pageSize = ref(18) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()
@@ -170,16 +170,6 @@ watch(() => route.query?.search_key, (newVal) => {
   background-color: rgba(255, 255, 255, 0.06);
 }
 
-.icon-btn.right {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
-.icon-btn.left {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-}
-
 .header-title {
   flex: 1;
   text-align: center;
@@ -211,9 +201,9 @@ watch(() => route.query?.search_key, (newVal) => {
 }
 
 .card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .cover {
@@ -305,10 +295,17 @@ watch(() => route.query?.search_key, (newVal) => {
     color: #e0e0e0 !important;
 }
 
-@media (min-width: 768px) {
-    .card-list {
-        max-width: 560px;
-        margin: 0 auto;
-    }
+@media (min-width: 512px) {
+  .card-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
 }
 </style>

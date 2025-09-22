@@ -40,7 +40,7 @@ import { getList } from '@/api/content'
 
 
 const currentPage = ref(1)
-const pageSize = ref(15) // 每页数量
+const pageSize = ref(18) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()
@@ -87,8 +87,8 @@ fetchContentList()
 }
 
 .card-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
@@ -180,10 +180,18 @@ fetchContentList()
   color: #e0e0e0 !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 512px) {
   .card-list {
-    max-width: 560px;
-    margin: 0 auto;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 }
+
+@media (min-width: 1024px) {
+  .card-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
 </style>
