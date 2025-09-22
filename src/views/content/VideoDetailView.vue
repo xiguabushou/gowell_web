@@ -71,22 +71,18 @@ const containerMaxWidth = ref(800) // 容器最大宽度
 
 // 计算播放器容器样式
 const playerStyle = computed(() => {
-  if (videoDimensions.value.width === 0 || videoDimensions.value.height === 0) {
-    // 如果视频尺寸未知，使用默认16:9比例
-    return {
-      paddingTop: '56.25%'
-    }
-  }
-  
-  const aspectRatio = videoDimensions.value.height / videoDimensions.value.width
-  const containerWidth = Math.min(window.innerWidth - 24, containerMaxWidth.value) // 减去padding
-  const containerHeight = containerWidth * aspectRatio
-  
+  // 使用 CSS aspect-ratio，确保在任意比例下完整显示，且不超过视口高度
+  const hasMeta = videoDimensions.value.width > 0 && videoDimensions.value.height > 0
+  const aspect = hasMeta
+    ? `${videoDimensions.value.width} / ${videoDimensions.value.height}`
+    : '16 / 9'
+
   return {
     width: '100%',
-    paddingTop: `${aspectRatio * 100}%`,
     maxWidth: `${containerMaxWidth.value}px`,
-    margin: '0 auto'
+    margin: '0 auto',
+    aspectRatio: aspect,
+    maxHeight: '90vh'
   }
 })
 
@@ -167,7 +163,7 @@ watch(
 
 <style lang="css" scoped>
 .video-detail-container {
-  min-height: 100ch;
+  min-height: 100vh;
   background: #121212;
   padding: 12px 12px 22px;
   box-sizing: border-box;
@@ -221,12 +217,10 @@ watch(
 }
 
 .video-element {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
 }
 
 .video-placeholder {

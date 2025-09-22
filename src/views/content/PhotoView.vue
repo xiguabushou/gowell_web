@@ -120,6 +120,7 @@ fetchContentList()
   border: none;
   border-radius: 10px;
   font-weight: 600;
+  font-size: 20px;
 }
 
 .pagination-wrapper {

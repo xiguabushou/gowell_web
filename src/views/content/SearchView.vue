@@ -89,7 +89,10 @@ const onSearch = () => {
         return
     }
     currentPage.value = 1
-    fetchContentList()
+    router.push({
+        path:route.path,
+        query:{search_key: keyword.value}
+    })
 }
 
 const goToDetail = (item) => {
@@ -238,6 +241,7 @@ watch(() => route.query?.search_key, (newVal) => {
     border: none;
     border-radius: 10px;
     font-weight: 600;
+    font-size: 20px;
 }
 
 .tags {
