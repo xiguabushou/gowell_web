@@ -25,12 +25,12 @@ const routes = [
       {
         path: '/uploadVideo',
         name: 'uploadVideo',
-        component: () => import( '../views/content/UploadVideoView.vue')
+        component: () => import( '../views/admin/UploadVideoView.vue')
       },
       {
         path: '/uploadPhoto',
         name: 'uploadPhoto',
-        component: () => import( '../views/content/UploadPhotoView.vue')
+        component: () => import( '../views/admin/UploadPhotoView.vue')
       },
       {
         path: '/videoDetail/:uid',
@@ -51,6 +51,11 @@ const routes = [
         path: '/userManagement',
         name: 'userManagement',
         component: () => import( '../views/admin/UserManagementView.vue')
+      },
+      {
+        path: '/contentList',
+        name: 'contentList',
+        component: () => import( '../views/admin/ContentListView.vue')
       }
     ]
   },
