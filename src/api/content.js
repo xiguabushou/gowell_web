@@ -32,6 +32,10 @@ function deleteContent(data) {
   return http.post("/api/content/delete", data);
 }
 
+function contentFreeze(data){
+  return http.post("/api/content/freeze", data)
+}
+
 export {
   getList,
   getInfo,
@@ -39,4 +43,5 @@ export {
   uploadVideo,
   getListByAdmin,
   deleteContent,
+  contentFreeze,
 };
