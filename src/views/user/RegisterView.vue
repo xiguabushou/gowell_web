@@ -114,6 +114,7 @@ import { useRouter } from 'vue-router';
 import { register } from '@/api/user';
 import { getCaptcha, sendEmailCode } from '@/api/base';
 import { setLocalStorage,removeLocalStorage } from '@/utils/common'
+import  store  from '@/store';
 
 const router = useRouter();
 
@@ -233,13 +234,19 @@ const handleRegister = () => {
         if (res.code == "0") {
           const token = res.data.access_token
           const expires_time = res.data.access_token_expires_at
+          const userInfo = res.data.user
           removeLocalStorage("token")
           removeLocalStorage("expires_time")
           setLocalStorage("token",token)
           setLocalStorage("expires_time",expires_time)
+          store.commit('setUserInfo',userInfo)
           ElMessage.success('注册成功！');
           loading.value = false;
-          // 注册成功后跳转到登录页
+
+          if (userInfo.role_id == 0){
+            router.push('/askForVip')
+            return
+          }
           router.push('/')
         
         } else {

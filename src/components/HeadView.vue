@@ -109,6 +109,11 @@ const drawerVisible = ref(false)
 const isAdmin = ref(false)
 
 const onSearchClick = () => {
+  if(store.getters.userInfo.role_id == 0 ){
+    ElMessage.info("你还不是会员哦，快加入会员吧！")
+    return
+  }
+  
   if (route.path == "/video" || route.path.split('/')[1] == "videoDetail") {
     router.push("/search/1")
   } else if (route.path == "/photo" || route.path.split('/')[1] == "photoDetail") {
@@ -162,6 +167,10 @@ const handleLogout = async () => {
 
 const handleMenuSelect = (key) => {
   drawerVisible.value = false
+  if(store.getters.userInfo.role_id == 0 ){
+    ElMessage.info("你还不是会员哦，快加入会员吧！")
+    return
+  }
   switch (key) {
     case '1': router.push('/'); break
     case '2': router.push('/video'); break

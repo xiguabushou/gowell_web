@@ -56,7 +56,12 @@ const routes = [
         path: '/contentList',
         name: 'contentList',
         component: () => import( '../views/admin/ContentListView.vue')
-      }
+      },  
+      {
+        path: '/askForVip',
+        name: 'askForVip',
+        component: () => import( '../views/user/AskForVipView.vue')
+      },
     ]
   },
   {

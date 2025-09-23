@@ -151,6 +151,10 @@ const handleLogin = () => {
 
           loading.value = false;
           ElMessage.success('登录成功！');
+          if (userInfo.role_id == 0){
+            router.push('/askForVip')
+            return
+          }
           router.push('/')
         }else{
           loading.value = false;

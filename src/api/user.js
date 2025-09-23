@@ -21,6 +21,11 @@ function logout() {
   return http.post("/api/user/logout");
 }
 
+// 申请成为VIP
+function askForVip(data) {
+  return http.post("/api//user/askForVip", data);
+}
+
 // 获取申请VIP列表
 function getListAboutAskForVip(params) {
   return http.get("/api/user/getListAboutAskForVip", { params });
@@ -51,6 +56,7 @@ export {
   forgotPassword,
   resetForgotPassword,
   logout,
+  askForVip,
   getListAboutAskForVip,
   approvingForVip,
   getUserList,

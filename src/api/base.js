@@ -1,5 +1,9 @@
 import http from "@/request/request";
 
+function ping(params) {
+  return http.get("/api/base/ping", { params });
+}
+
 function getCaptcha(params) {
   return http.get("/api/base/captcha", { params });
 }
@@ -9,4 +13,4 @@ function sendEmailCode(data) {
   return http.post("/api/base/sendEmailVerificationCode", data);
 }
 
-export { getCaptcha, sendEmailCode };
+export {ping, getCaptcha, sendEmailCode };
