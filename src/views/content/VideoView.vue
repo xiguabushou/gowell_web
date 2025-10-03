@@ -31,16 +31,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { getList } from '@/api/content'
 
 
 const currentPage = ref(1)
-const pageSize = ref(18) // 每页数量
+const pageSize = ref(2) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()
+const route = useRoute()
 
 async function fetchContentList() {
   const params = {
@@ -54,9 +55,29 @@ async function fetchContentList() {
 }
 
 const onPageChange=(newPage)=>{
-  currentPage.value = newPage
-  fetchContentList()
+  router.push({
+    path:route.path,
+    query:{page:newPage}
+  })
 }
+
+onMounted(() => {
+    const q = route.query?.page
+    if (typeof q === 'string' && q.trim()) {
+        currentPage.value = Number(q) || 1
+        fetchContentList()
+    }else{
+      fetchContentList()
+    }
+})
+
+watch(() => route.query?.page, (newVal) => {
+    const val = typeof newVal === 'string' ? newVal : ''
+    if (val && val.trim()) {
+        currentPage.value = Number(val) || 1
+        fetchContentList()
+    }
+})
 
 const goToDetail = (item) => {
   if (!item || !item.uid) return
@@ -70,9 +91,6 @@ const goToDetail = (item) => {
   }
 }
 
-
-// 初始化加载
-fetchContentList()
 </script>
 
 <style lang="css" scoped>

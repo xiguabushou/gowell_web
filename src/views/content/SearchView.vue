@@ -50,7 +50,7 @@ import { ElMessage } from 'element-plus'
 
 
 const currentPage = ref(1)
-const pageSize = ref(18) // 每页数量
+const pageSize = ref(1) // 每页数量
 const total = ref(0)
 const filteredData = ref([])
 const router = useRouter()
@@ -79,8 +79,10 @@ const onPageChange = (newPage) => {
         ElMessage.warning('输入内容不能为空')
         return
     }
-    currentPage.value = newPage
-    fetchContentList()
+    router.push({
+    path:route.path,
+    query:{search_key:keyword.value,page:newPage}
+  })
 }
 
 const onSearch = () => {
@@ -91,7 +93,7 @@ const onSearch = () => {
     currentPage.value = 1
     router.push({
         path:route.path,
-        query:{search_key: keyword.value}
+        query:{search_key: keyword.value,page: 1}
     })
 }
 
@@ -120,9 +122,10 @@ const goBackHome = () =>{
 
 onMounted(() => {
     const q = route.query?.search_key
+    const page = route.query?.page || 1
     if (typeof q === 'string' && q.trim()) {
         keyword.value = q
-        currentPage.value = 1
+        currentPage.value = Number(page) || 1
         fetchContentList()
     }
 })
@@ -132,6 +135,14 @@ watch(() => route.query?.search_key, (newVal) => {
     if (val && val.trim()) {
         keyword.value = val
         currentPage.value = 1
+        fetchContentList()
+    }
+})
+
+watch(() => route.query?.page, (newPage) => {
+    const val = typeof newPage === 'string' ? newPage : ''
+    if (val && val.trim()) {
+        currentPage.value = Number(val) || 1
         fetchContentList()
     }
 })
