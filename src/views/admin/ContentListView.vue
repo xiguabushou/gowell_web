@@ -94,7 +94,7 @@
 
     <!-- 分页 -->
     <div class="pagination-wrapper">
-      <el-pagination layout="prev, pager, next, jumper" :current-page="currentPage" :page-size="pageSize" :total="total"
+      <el-pagination layout="pager, jumper" :pager-count="5" :current-page="currentPage" :page-size="pageSize" :total="total"
         @current-change="onPageChange" />
     </div>
 
@@ -175,7 +175,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getListByAdmin, deleteContent, contentFreeze } from '@/api/content'
 import { useRouter } from 'vue-router'
@@ -253,9 +253,16 @@ async function fetchContentList() {
   }
 }
 
-const onPageChange = (newPage) => {
+const onPageChange = async(newPage) => {
   currentPage.value = newPage
-  fetchContentList()
+  await fetchContentList()
+
+  nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    })
 }
 
 const handleSearch = () => {

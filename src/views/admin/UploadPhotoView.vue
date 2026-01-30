@@ -169,9 +169,9 @@ const handleCoverUpload = (event) => {
     return
   }
 
-  // 检查文件大小（限制为10MB）
-  if (file.size > 50 * 1024 * 1024) {
-    ElMessage.error('封面图片大小不能超过50MB')
+  // 检查文件大小（限制为500MB）
+  if (file.size > 500 * 1024 * 1024) {
+    ElMessage.error('封面图片大小不能超过500MB')
     return
   }
 
@@ -196,8 +196,8 @@ const handleImageUpload = (event) => {
       return
     }
 
-    if (file.size > 50 * 1024 * 1024) {
-      ElMessage.error('图片文件大小不能超过50MB')
+    if (file.size > 5000 * 1024 * 1024) {
+      ElMessage.error('图片文件大小不能超过5000MB')
       return
     }
   }

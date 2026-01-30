@@ -131,10 +131,11 @@
     <!-- 分页组件 -->
     <div class="pagination-wrapper">
       <el-pagination
-        layout="prev, pager, next, jumper"
+        layout="pager, jumper"
         :current-page="currentPage"
         :page-size="pageSize"
         :total="total"
+        :pager-count="5"
         @current-change="onPageChange"
       />
     </div>
@@ -206,7 +207,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getUserList, deleteUser, editUser } from "@/api/user";
 
@@ -314,9 +315,15 @@ async function fetchUserList() {
 }
 
 // 分页变化处理
-const onPageChange = (newPage) => {
+const onPageChange = async(newPage) => {
   currentPage.value = newPage;
-  fetchUserList();
+  await fetchUserList();
+  nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    })
 };
 
 // 搜索处理函数

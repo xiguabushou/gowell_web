@@ -138,9 +138,9 @@ const handleVideoUpload = (event) => {
     return
   }
 
-  // 检查文件大小（可选，限制为100MB）
-  if (file.size > 1000 * 1024 * 1024) {
-    ElMessage.info('视频文件大小不能超过1000MB')
+  // 检查文件大小（可选，限制为5000MB）
+  if (file.size > 5000 * 1024 * 1024) {
+    ElMessage.info('视频文件大小不能超过5000MB')
     return
   }
 

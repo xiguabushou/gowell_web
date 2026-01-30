@@ -45,7 +45,8 @@
 
     <div class="pagination-wrapper">
       <el-pagination
-        layout="prev, pager, next, jumper"
+        layout="pager, jumper"
+        :pager-count="5"
         :current-page="currentPage"
         :page-size="pageSize"
         :total="total"
@@ -56,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { getListAboutAskForVip, approvingForVip } from '@/api/user'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -105,9 +106,16 @@ async function fetchApplicationList() {
 }
 
 // 分页变化处理
-const onPageChange = (newPage) => {
+const onPageChange = async(newPage) => {
   currentPage.value = newPage
-  fetchApplicationList()
+  await fetchApplicationList()
+
+  nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    })
 }
 
 // 处理申请（同意/不同意）

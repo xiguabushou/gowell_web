@@ -34,7 +34,7 @@
         <el-empty v-else-if="hasSearched" description="找不到相关内容" :image-size="120" />
 
         <div class="pagination-wrapper" v-if="total > 0">
-            <el-pagination layout="prev, pager, next, jumper" :current-page="currentPage" :page-size="pageSize"
+            <el-pagination layout="pager, jumper" :pager-count="5" :current-page="currentPage" :page-size="pageSize"
                 :total="total" @current-change="onPageChange" />
         </div>
     </div>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getList } from '@/api/content'
 import { ElMessage } from 'element-plus'
@@ -137,6 +137,13 @@ watch(() => route.query?.search_key, (newVal) => {
         currentPage.value = 1
         fetchContentList()
     }
+
+    nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      })
 })
 
 watch(() => route.query?.page, (newPage) => {

@@ -21,7 +21,7 @@
 
         <!-- 分页区域（如后端大图集分页返回，可用） -->
         <div class="pagination-wrapper">
-            <el-pagination layout="prev, pager, next, jumper" :current-page="currentPage" :page-size="pageSize"
+            <el-pagination layout="pager, jumper" :pager-count="5" :current-page="currentPage" :page-size="pageSize"
                 :total="total" @current-change="onPageChange" />
         </div>
 
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getInfo } from '@/api/content'
 
@@ -82,9 +82,16 @@ async function fetchPhotoInfo() {
     recommendList.value = res.data?.recommend_list || []
 }
 
-const onPageChange = (newPage) => {
+const onPageChange = async (newPage) => {
     currentPage.value = newPage
-    fetchPhotoInfo()
+    await fetchPhotoInfo()
+
+    nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    })
 }
 
 const goToPhoto = (item) => {

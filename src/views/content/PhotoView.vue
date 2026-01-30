@@ -24,7 +24,8 @@
 
     <div class="pagination-wrapper">
       <el-pagination
-        layout="prev, pager, next, jumper"
+        layout="pager, jumper"
+        :pager-count="5"
         :current-page="currentPage"
         :page-size="pageSize"
         :total="total"
@@ -36,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getList } from '@/api/content'
 
@@ -82,6 +83,13 @@ watch(() => route.query?.page, (newVal) => {
         currentPage.value = Number(val) || 1
         fetchContentList()
     }
+
+    nextTick(() => {
+        document.querySelector('.contain')?.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      })
 })
 
 const goToDetail = (item) => {
